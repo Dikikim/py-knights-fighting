@@ -2,6 +2,7 @@ class Knight:
     def __init__(self, config: dict) -> None:
         self.name: str = config["name"]
 
+        # Base stats
         base_hp = config.get("hp", 0)
         base_power = config.get("power", 0)
         base_protection = 0
@@ -26,9 +27,8 @@ class Knight:
         self.hp = base_hp + potion_hp
         self.power = base_power + weapon_power + potion_power
 
-        self.protection = (
-                base_protection + armour_protection + potion_protection
-        )
+        self.protection = base_protection + armour_protection
+        self.protection += potion_protection
 
     def take_damage(self, damage: int) -> None:
         self.hp -= damage
