@@ -25,7 +25,10 @@ class Knight:
 
         self.hp = base_hp + potion_hp
         self.power = base_power + weapon_power + potion_power
-        self.protection = base_protection + armour_protection + potion_protection
+
+        self.protection = (
+                base_protection + armour_protection + potion_protection
+        )
 
     def take_damage(self, damage: int) -> None:
         self.hp -= damage
