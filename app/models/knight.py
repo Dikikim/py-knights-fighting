@@ -1,34 +1,26 @@
-class Knight:
+class Knight:  # Make sure this is a capital K!
     def __init__(self, config: dict) -> None:
         self.name: str = config["name"]
 
-        # Base stats
-        base_hp = config.get("hp", 0)
-        base_power = config.get("power", 0)
-        base_protection = 0
+        self.hp: int = config.get("hp", 0)
+        self.power: int = config.get("power", 0)
+        self.protection: int = 0
 
-        armour_protection = sum(
-            part.get("protection", 0) for part in config.get("armour", [])
-        )
+        self._apply_armour(config.get("armour") or [])
+        self._apply_weapon(config.get("weapon") or {})
+        self._apply_potion(config.get("potion") or {})
 
-        weapon_power = 0
-        if "weapon" in config and config["weapon"]:
-            weapon_power = config["weapon"].get("power", 0)
+    def _apply_armour(self, armour: list) -> None:
+        self.protection += sum(part.get("protection", 0) for part in armour)
 
-        potion_hp, potion_power, potion_protection = 0, 0, 0
-        potion = config.get("potion")
+    def _apply_weapon(self, weapon: dict) -> None:
+        self.power += weapon.get("power", 0)
 
-        if potion and "effect" in potion:
-            effect = potion["effect"]
-            potion_hp = effect.get("hp", 0)
-            potion_power = effect.get("power", 0)
-            potion_protection = effect.get("protection", 0)
-
-        self.hp = base_hp + potion_hp
-        self.power = base_power + weapon_power + potion_power
-
-        self.protection = base_protection + armour_protection
-        self.protection += potion_protection
+    def _apply_potion(self, potion: dict) -> None:
+        effect = potion.get("effect", {})
+        self.hp += effect.get("hp", 0)
+        self.power += effect.get("power", 0)
+        self.protection += effect.get("protection", 0)
 
     def take_damage(self, damage: int) -> None:
         self.hp -= damage
